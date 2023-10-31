@@ -1,0 +1,182 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box
+}
+
+html {
+  font-size: 62.5%
+}
+
+a {
+  color: #B80000;
+  text-decoration: none
+}
+
+.bloc {
+  display: inline-block;
+  width: 400px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.2rem;
+  line-height: 1.5;
+  text-align: left;
+}
+
+.rotate {
+  transform: rotate(180deg);
+  text-align: center;
+}
+
+hr {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.bloc h1 {
+  padding: 0;
+  font-variant: small-caps;
+  letter-spacing: 1px;
+  color: #6D0000;
+  font-size: 1.8rem;
+  line-height: 1;
+  break-after: avoid;
+}
+
+.type {
+  padding: 2px 0 0px 0;
+  text-align: left;
+  font-style: italic
+}
+
+p {
+  padding: 0;
+  margin: 9px 0 9px 0
+}
+
+ul {
+  list-style: square outside;
+  margin-left: 17px
+}
+
+li {
+  margin-top: 3px
+}
+
+.center {
+  text-align: center
+}
+
+.niveau {
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-align: center;
+  background-color: #444;
+  color: white;
+  padding: 4px;
+  margin: 10px 0 10px 0
+}
+
+.petit {
+  font-size: 1.1rem;
+  line-height: 1.5
+}
+
+.trespetit {
+  font-size: 1.0rem;
+  line-height: 1.5
+}
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  font-family: arial, sans-serif;
+  vertical-align:top;
+}
+
+.bloc table th {
+  font-weight: bold;
+  vertical-align: bottom
+}
+
+.bloc table th,
+.bloc table td {
+  min-width: 45px;
+  text-align: left
+}
+
+.bloc table th.center,
+.bloc table td.center {
+  text-align: center
+}
+
+.bloc table td.center {
+  text-align: center
+}
+
+.picture {
+  text-align: center;
+  margin-bottom: 8px;
+  font-family: arial, sans-serif;
+  font-size: 1rem;
+  font-style: italic
+}
+
+.picture img {
+  border: 4px solid #888;
+  max-width: 100%;
+  max-height: 600px;
+  height: auto;
+  width: auto
+}
+
+.poison,
+.herbe {
+  float: right;
+  margin: 0 0 5px 10px
+}
+
+.jaune {
+  background-color: #fff;
+  padding: 10px 8px 5px 8px;
+}
+
+div.sansSerif svg {
+  width: 100%;
+  height: 5px
+}
+
+.sansSerif {
+  font-family: arial, sans-serif
+}
+
+.red {
+  color: #6D0000
+}
+
+.carac {
+  display: inline-block;
+  padding-left: 16px;
+  text-align: center
+}
+
+.rub {
+  color: #6D0000;
+  margin: 10px 0 5px 0;
+  border-bottom: 1px solid #B30303;
+  font-size: 1.5rem;
+  font-variant: small-caps
+}
+
+div .variant {
+  background-color: #DBE2C2;
+  font-family: arial, sans-serif;
+  border-top: 4px solid #404040;
+  border-bottom: 4px solid #404040;
+  padding: 5px 10px 0px 10px;
+  margin: 10px 0 0 0
+}
+
+div .variant::first-letter {
+  font-size: 15px
+}
