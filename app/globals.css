@@ -4,6 +4,10 @@
     -webkit-print-color-adjust: exact;
     margin: 0px;
   }
+
+  .no-print {
+    display: none !important;
+  }
 }
 
 @page {

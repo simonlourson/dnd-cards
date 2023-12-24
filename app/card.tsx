@@ -11,8 +11,7 @@ export default function Card(props: CardProps) {
 
   /* Wizard #1c71d8 */
   const color = props.color ? props.color : '#000'
-  console.log(props.color)
-
+  
   return (
     <div className="myCard" style={{backgroundColor: color}}>
       <div className="myBody">
