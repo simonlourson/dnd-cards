@@ -30,7 +30,6 @@ export class SvgGroup extends SvgElement {
   }
 
   override getHtml(): string {
-    //return `<g id="${this.id}">${Array.from(this.children.values()).map((child) => {return child.getHtml()}).join('')}</g>`
-    return this.outerHtml.replace('id="image_ability_score"', `id="image_ability_score" transform="translate(${-this.bbox.x},${-this.bbox.y})"`)
+    return this.outerHtml.replace(`id="${this.id}"`, `id="${this.id}" transform="translate(${-this.bbox.x},${-this.bbox.y})"`)
   }
 }

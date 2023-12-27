@@ -18,7 +18,6 @@ export default function SvgLoader() {
     let simpleSvg: SvgGroup = new SvgGroup(svg.children.item(0) as SVGGElement)
 
     setSvgData(simpleSvg)
-    console.log(simpleSvg)
 
   }, []);
 

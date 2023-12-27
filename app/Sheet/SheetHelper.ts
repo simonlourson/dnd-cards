@@ -81,6 +81,21 @@ interface Attack {
   damage: string
 }
 
+interface Spell {
+  level: number
+  name: string
+  school: number
+  time: string
+  range: string
+  verbal: boolean
+  somatic: boolean
+  material: boolean
+  materials: string
+  duration: string
+  concentration: boolean
+  text: string
+}
+
 const damageTypes: string[] = [
   'Any',
   'Bludgeoning',
@@ -187,6 +202,9 @@ export interface CharacterSheet {
   initiative: number
   attacks: Attack[]
   counters: Counter[]
+  spellAbility: number
+  spellSlots: number[]
+  spells: Spell[][]
 }
 
 export function scoreToModifier(abilityScore: number): number {
@@ -216,11 +234,35 @@ function counterFromNode(xmlData: any): Counter {
 
 export function extractCharacterSheetFromXmlData(xmlData: any): CharacterSheet {
 
-  console.log(xmlData)
   const name = xmlData?.pc.character.name._text
 
   const feats: Feat[] = []
   findFeats(xmlData, feats)
+
+  const spellAbility = Number.parseInt(xmlData?.pc.character.class.spellAbility._text)
+  const spellSlots = xmlData?.pc.character.slots._text.split(',').slice(0, 10).map(function(s: string) { return parseInt(s) })
+  const spells: Spell[][] = []
+
+  if (xmlData?.pc.character.class.spell?.length)
+    for (let xmlNode of xmlData?.pc.character.class.spell) {
+      const spell: Spell = {
+        level: xmlNode.level ? Number.parseInt(xmlNode.level._text) : 0,
+        name: xmlNode.name._text,
+        school: xmlNode.school ? Number.parseInt(xmlNode.school._text) : 0,
+        time: xmlNode.time._text,
+        range: xmlNode.range._text,
+        verbal: xmlNode.v ? true : false,
+        somatic: xmlNode.s ? true : false,
+        material: xmlNode.m ? true : false,
+        materials: xmlNode.materials ? xmlNode.materials._text : undefined,
+        duration: xmlNode.duration._text,
+        concentration: (xmlNode.duration._text as string).includes('Concentration'),
+        text: xmlNode.text._text
+      }
+
+      if (!spells[spell.level]) spells[spell.level] = []
+      spells[spell.level].push(spell)
+    }
 
   const abilityScores: number[] = xmlData?.pc.character.abilities._text.split(',').map(function(s: string) { return parseInt(s) }).slice(0, 6)
   const savingThrowProficiencies: boolean[] = []
@@ -281,7 +323,7 @@ export function extractCharacterSheetFromXmlData(xmlData: any): CharacterSheet {
     }
   }
 
-  let armorClass = 10 + scoreToModifier(1)
+  let armorClass = 10 + scoreToModifier(abilityScores[1])
   const attacks: Attack[] = []
   const weapons: Weapon[] = []
   if (xmlData?.pc.character.item?.length > 0)
@@ -333,6 +375,9 @@ export function extractCharacterSheetFromXmlData(xmlData: any): CharacterSheet {
     feats: feats,
     page2Feats: [],
     abilityScores: abilityScores,
+    spellAbility: spellAbility,
+    spells: spells,
+    spellSlots: spellSlots,
     className: className,
     race: race,
     background: background,
@@ -367,7 +412,7 @@ export function findProficiencies(xmlData: any, proficiencies: number[]) {
   for (var prop in xmlData) {
     const type = xmlData[prop].constructor.name
     if (prop == 'proficiency') {
-      if (type == 'Object') console.log('this should never happen'/*parseInt(xmlData[prop]._text)*/)
+      if (type == 'Object') proficiencies.push(parseInt(xmlData[prop]._text))
       else if (type == 'Array') for (var proficiency of xmlData[prop]) proficiencies.push(parseInt(proficiency._text))
     }
     else if (type != 'String') findProficiencies(xmlData[prop], proficiencies)

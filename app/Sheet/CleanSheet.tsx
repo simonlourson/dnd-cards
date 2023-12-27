@@ -25,6 +25,7 @@ export default function CleanSheet(props: CleanSheetProps) {
   const bboxRace = props.svgData.getItem('position_character_race')?.bbox
   const bboxClass = props.svgData.getItem('position_character_class')?.bbox
   const bboxBackground = props.svgData.getItem('position_character_background')?.bbox
+  const bboxSpellAbility = props.svgData.getItem('position_spell_ability')?.bbox
 
   return (
     <>
@@ -116,7 +117,7 @@ export default function CleanSheet(props: CleanSheetProps) {
             return <div key={index} style={{marginTop: '2mm', textAlign: 'center', backgroundColor: '#e5e5e5', }}>
               <div className={`${styles.text} ${styles.text7}`} style={{textAlign: 'center'}}>{value.name}</div>
               {Array(value.max).fill(value).map((value, index) => {
-                return <div key={index} style={{display: 'inline-block', marginTop: '1mm', marginLeft: '1mm', backgroundColor: '#fff', width: '5mm', height: '5mm', borderWidth: '1pt', borderStyle: 'solid', borderColor: '#000'}} />
+                return <div key={index} style={{display: 'inline-block', marginTop: '1mm', marginLeft: '1mm', backgroundColor: '#fff', width: '4.5mm', height: '4.5mm', borderWidth: '1pt', borderStyle: 'solid', borderColor: '#000'}} />
               })}
             </div>
           })}
@@ -150,7 +151,7 @@ export default function CleanSheet(props: CleanSheetProps) {
           <div className={`${styles.text} ${styles.text6}`} style={{position: 'absolute', width: '100%', bottom: '1mm', textAlign: 'center'}}>JdS CONTRE LA MORT</div>
         </SvgContainer>
         <SvgContainer svgPathData={getSvgDataForId('container_text')}>
-          <div style={{width: `${getSvgDataForId('container_text').bbox.width - 6}mm`, height: `${getSvgDataForId('container_text').bbox.height - 6}mm`, margin: '3mm', columnCount: 3, columnFill: 'auto'}}>
+          <div style={{overflow: 'hidden', width: `${getSvgDataForId('container_text').bbox.width - 6}mm`, height: `${getSvgDataForId('container_text').bbox.height - 6}mm`, margin: '3mm', columnCount: 3, columnFill: 'auto'}}>
             {props.characterSheet.feats.map((value, index) => (
               <div key={index} className={`${styles.with_background}`} style={{/*breakInside: 'avoid',*/ marginBottom: '2mm' }}>
                 <div style={{display: 'flex', justifyContent: 'space-between'}}>
@@ -172,9 +173,9 @@ export default function CleanSheet(props: CleanSheetProps) {
 
       </div>
 
-      <div className={`${styles.absolute} ${styles.sheet}`} style={{top: '297mm'}}>
+      {props.characterSheet.page2Feats.length > 0 && <div className={`${styles.absolute} ${styles.sheet}`} style={{top: '297mm'}}>
         <SvgContainer svgPathData={getSvgDataForId('p2_container_text')}>
-          <div style={{width: `${getSvgDataForId('p2_container_text').bbox.width - 6}mm`, height: `${getSvgDataForId('p2_container_text').bbox.height - 6}mm`, margin: '3mm', columnCount: 4, columnFill: 'auto'}}>
+          <div style={{overflow: 'hidden', width: `${getSvgDataForId('p2_container_text').bbox.width - 6}mm`, height: `${getSvgDataForId('p2_container_text').bbox.height - 6}mm`, margin: '3mm', columnCount: 4, columnFill: 'auto'}}>
             {props.characterSheet.page2Feats.map((value, index) => (
               <div key={index} className={`${styles.with_background}`} style={{/*breakInside: 'avoid',*/ marginBottom: '2mm' }}>
                 <div style={{display: 'flex', justifyContent: 'space-between'}}>
@@ -185,13 +186,46 @@ export default function CleanSheet(props: CleanSheetProps) {
             ))}
           </div>
         </SvgContainer>
-      </div>
+      </div>}
 
-      <div className={`${styles.absolute} ${styles.sheet}`} style={{top: '594mm'}}>
-        <SvgContainer svgPathData={getSvgDataForId('header_spells')}>
+      {props.characterSheet.spells.length > 0 && <div className={`${styles.absolute} ${styles.sheet}`} style={{top: `${props.characterSheet.page2Feats.length > 0 ? 594 : 297}mm`}}>
+        <SvgContainer svgPathData={getSvgDataForId('header_spells')} />
+        {bboxSpellAbility && <div className={`${styles.absolute} ${styles.text} ${styles.text13}`} style={{left: `${bboxSpellAbility.x}mm`, top: `${bboxSpellAbility.y}mm`, width: `${bboxSpellAbility.width}mm`, height: `${bboxSpellAbility.height}mm`, textAlign: 'center' }}>{abilities[props.characterSheet.spellAbility]}</div>}
+        
+        <SvgContainer svgPathData={getSvgDataForId('container_spells_per_day')}>
 
         </SvgContainer>
-      </div>
+        <SvgContainer svgPathData={getSvgDataForId('container_spells_dd')}>
+
+        </SvgContainer>
+        <SvgContainer svgPathData={getSvgDataForId('container_spells_attack_bonus')}>
+
+        </SvgContainer>
+        <SvgContainer svgPathData={getSvgDataForId('container_spells')}>
+          <div style={{overflow: 'hidden', width: `${getSvgDataForId('container_spells').bbox.width - 6}mm`, height: `${getSvgDataForId('p2_container_text').bbox.height - 6}mm`, margin: '3mm', columnCount: 3, columnFill: 'auto'}}>
+            {props.characterSheet.spellSlots.filter((value) => { return value > 0 }).map((value, index) => {
+              return <div key={index} style={{marginBottom: '2mm' }}>
+                <div className={`${styles.with_background}`} style={{width: `${props.svgData.getItem('image_spell_header')?.bbox.width}mm`, height: `${props.svgData.getItem('image_spell_header')?.bbox.height}mm`, backgroundImage: `url(data:image/svg+xml;base64,${btoa(props.svgData.getItem('image_spell_header')?.getImageHtml() || '')})`, display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+                  <div className={`${styles.text} ${styles.text12}`} style={{marginLeft: '2mm', width: '10mm'}}>{index}</div>
+                  {index != 0 && <div>{Array(value).fill(value).map((value, index) => {
+                    return <div key={index} style={{display: 'inline-block', marginTop: '1mm', marginLeft: '1mm', backgroundColor: '#fff', width: '5mm', height: '5mm', borderWidth: '1pt', borderStyle: 'solid', borderColor: '#000'}} />
+                  })}</div>}
+                </div>
+                <table style={{paddingLeft: '1mm'}}>
+                  <tbody>
+                  {props.characterSheet.spells[index].map((value, index) => {
+                    return <tr key={index} style={{}}>
+                      <td style={{verticalAlign: 'middle', width: '4mm'}}><SvgImage svgPathData={props.svgData.getItem('image_checkbox_false')}/></td>
+                      <td className={`${styles.regular_text} ${styles.text12}`} style={{}}>{value.name}</td>
+                    </tr>
+                  })}
+                  </tbody>
+                </table>
+              </div>
+            })}
+          </div>
+        </SvgContainer>
+      </div>}
       
     </div>
     

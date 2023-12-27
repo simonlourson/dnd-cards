@@ -17,9 +17,9 @@ export default function SheetLoader(props: SheetLoaderProps) {
   const [characterSheet, setCharacterSheet] = useState<CharacterSheet>()
 
   useEffect(() => {
-    //fetch('/Adran Fierlame.xml')
+    fetch('/Adran Fierlame.xml')
     //fetch('/Chausey.xml')
-    fetch('/Théren Mélianne.xml')
+    //fetch('/Théren Mélianne.xml')
       .then((response) => response.text())
       .then((xmlText) => {
         setCharacterSheet(
