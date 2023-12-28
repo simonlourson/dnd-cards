@@ -155,11 +155,11 @@ export default function CleanSheet(props: CleanSheetProps) {
             {props.characterSheet.feats.map((value, index) => (
               <div key={index} className={`${styles.with_background}`} style={{/*breakInside: 'avoid',*/ marginBottom: '2mm' }}>
                 <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                  <div className={`${styles.text} ${styles.text6}`}>{value.name}</div>
-                  <div className={`${styles.text} ${styles.text6} ${styles.text_link} no-print`} onClick={() => props.removeFeat(index, 2)}>move</div>
-                  <div className={`${styles.text} ${styles.text6} ${styles.text_link} no-print`} onClick={() => props.removeFeat(index)}>remove</div>
+                  <div className={`${styles.text} ${styles.text7}`}>{value.name}</div>
+                  <div className={`${styles.text} ${styles.text7} ${styles.text_link} no-print`} onClick={() => props.removeFeat(index, 2)}>move</div>
+                  <div className={`${styles.text} ${styles.text7} ${styles.text_link} no-print`} onClick={() => props.removeFeat(index)}>remove</div>
                 </div>
-                <div className={`${styles.rules_text} ${styles.text6}`} dangerouslySetInnerHTML={{__html: value.text}} />
+                <div className={`${styles.rules_text} ${styles.text7}`} dangerouslySetInnerHTML={{__html: value.text}} />
               </div>
             ))}
           </div>
@@ -179,9 +179,9 @@ export default function CleanSheet(props: CleanSheetProps) {
             {props.characterSheet.page2Feats.map((value, index) => (
               <div key={index} className={`${styles.with_background}`} style={{/*breakInside: 'avoid',*/ marginBottom: '2mm' }}>
                 <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                  <div className={`${styles.text} ${styles.text6}`}>{value.name}</div>
+                  <div className={`${styles.text} ${styles.text7}`}>{value.name}</div>
                 </div>
-                <div className={`${styles.rules_text} ${styles.text6}`} dangerouslySetInnerHTML={{__html: value.text}} />
+                <div className={`${styles.rules_text} ${styles.text7}`} dangerouslySetInnerHTML={{__html: value.text}} />
               </div>
             ))}
           </div>
@@ -192,14 +192,23 @@ export default function CleanSheet(props: CleanSheetProps) {
         <SvgContainer svgPathData={getSvgDataForId('header_spells')} />
         {bboxSpellAbility && <div className={`${styles.absolute} ${styles.text} ${styles.text13}`} style={{left: `${bboxSpellAbility.x}mm`, top: `${bboxSpellAbility.y}mm`, width: `${bboxSpellAbility.width}mm`, height: `${bboxSpellAbility.height}mm`, textAlign: 'center' }}>{abilities[props.characterSheet.spellAbility]}</div>}
         
-        <SvgContainer svgPathData={getSvgDataForId('container_spells_per_day')}>
-
-        </SvgContainer>
+        {props.characterSheet.spellsPerDay > 0 && <SvgContainer svgPathData={getSvgDataForId('container_spells_per_day')}>
+          <div style={{width: `${getSvgDataForId('container_spells_per_day').bbox.width}mm`, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center'}}>
+            <div className={`${styles.text} ${styles.text13}`} style={{marginTop:'3mm'}} >{props.characterSheet.spellsPerDay}</div>
+            <div className={`${styles.text} ${styles.text8}`} style={{marginTop:'3.2mm', textAlign: 'center'}} >Sorts à préparer chaque jour</div>
+          </div>
+        </SvgContainer>}
         <SvgContainer svgPathData={getSvgDataForId('container_spells_dd')}>
-
+          <div style={{width: `${getSvgDataForId('container_spells_dd').bbox.width}mm`, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center'}}>
+            <div className={`${styles.text} ${styles.text13}`} style={{marginTop:'3mm'}} >{props.characterSheet.spellsDd}</div>
+            <div className={`${styles.text} ${styles.text8}`} style={{marginTop:'3.2mm', textAlign: 'center'}} >Degré de difficulté des sorts</div>
+          </div>
         </SvgContainer>
         <SvgContainer svgPathData={getSvgDataForId('container_spells_attack_bonus')}>
-
+          <div style={{width: `${getSvgDataForId('container_spells_dd').bbox.width}mm`, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', alignItems: 'center'}}>
+            <div className={`${styles.text} ${styles.text13}`} style={{marginTop:'3mm'}} >{modifierFormat.format(props.characterSheet.spellAttackBonus)}</div>
+            <div className={`${styles.text} ${styles.text8}`} style={{marginTop:'3.2mm', textAlign: 'center'}} >Bonus d'attaque des sorts</div>
+          </div>
         </SvgContainer>
         <SvgContainer svgPathData={getSvgDataForId('container_spells')}>
           <div style={{overflow: 'hidden', width: `${getSvgDataForId('container_spells').bbox.width - 6}mm`, height: `${getSvgDataForId('p2_container_text').bbox.height - 6}mm`, margin: '3mm', columnCount: 3, columnFill: 'auto'}}>
@@ -216,7 +225,7 @@ export default function CleanSheet(props: CleanSheetProps) {
                   {props.characterSheet.spells[index].map((value, index) => {
                     return <tr key={index} style={{}}>
                       <td style={{verticalAlign: 'middle', width: '4mm'}}><SvgImage svgPathData={props.svgData.getItem('image_checkbox_false')}/></td>
-                      <td className={`${styles.regular_text} ${styles.text12}`} style={{}}>{value.name}</td>
+                      <td className={`${styles.rules_text} ${styles.text12}`} style={{}}>{value.name}</td>
                     </tr>
                   })}
                   </tbody>

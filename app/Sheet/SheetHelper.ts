@@ -205,6 +205,9 @@ export interface CharacterSheet {
   spellAbility: number
   spellSlots: number[]
   spells: Spell[][]
+  spellsPerDay: number
+  spellsDd: number
+  spellAttackBonus: number
 }
 
 export function scoreToModifier(abilityScore: number): number {
@@ -239,10 +242,15 @@ export function extractCharacterSheetFromXmlData(xmlData: any): CharacterSheet {
   const feats: Feat[] = []
   findFeats(xmlData, feats)
 
+  const className = xmlData?.pc.character.class.name._text
+  const race = xmlData?.pc.character.race.name._text
+  const level = Number.parseInt(xmlData?.pc.character.class.level._text)
+  const proficiencyBonus = 1 + Math.ceil(level / 4)
+
   const spellAbility = Number.parseInt(xmlData?.pc.character.class.spellAbility._text)
   const spellSlots = xmlData?.pc.character.slots._text.split(',').slice(0, 10).map(function(s: string) { return parseInt(s) })
   const spells: Spell[][] = []
-
+  
   if (xmlData?.pc.character.class.spell?.length)
     for (let xmlNode of xmlData?.pc.character.class.spell) {
       const spell: Spell = {
@@ -268,12 +276,12 @@ export function extractCharacterSheetFromXmlData(xmlData: any): CharacterSheet {
   const savingThrowProficiencies: boolean[] = []
   const savingThrowBonuses: number[] = []
 
-  const className = xmlData?.pc.character.class.name._text
-  const race = xmlData?.pc.character.race.name._text
+  
+
   const background = xmlData?.pc.character.background.name._text
-  const level = Number.parseInt(xmlData?.pc.character.class.level._text)
+  
   const hpMax = Number.parseInt(xmlData?.pc.character.hpMax._text)
-  const proficiencyBonus = 1 + Math.ceil(level / 4)
+  
 
   const mods: Mod[] = []
   findMods(xmlData, mods)
@@ -281,6 +289,11 @@ export function extractCharacterSheetFromXmlData(xmlData: any): CharacterSheet {
   for (let mod of mods) {
     if (mod.category == 1) abilityScores[mod.type] += mod.value
   }
+
+  const spellsDd = 8 + proficiencyBonus + scoreToModifier(abilityScores[spellAbility])
+  const spellAttackBonus = proficiencyBonus + scoreToModifier(abilityScores[spellAbility])
+  let spellsPerDay = 0
+  if (className == 'Wizard') spellsPerDay = level + scoreToModifier(abilityScores[spellAbility])
 
   const proficiencies: number[] = []
   findProficiencies(xmlData, proficiencies)
@@ -324,6 +337,11 @@ export function extractCharacterSheetFromXmlData(xmlData: any): CharacterSheet {
   }
 
   let armorClass = 10 + scoreToModifier(abilityScores[1])
+  for (let mod of mods) {
+    if (mod.category == 0 && mod.type == 10) armorClass += mod.value
+  }
+
+
   const attacks: Attack[] = []
   const weapons: Weapon[] = []
   if (xmlData?.pc.character.item?.length > 0)
@@ -378,6 +396,9 @@ export function extractCharacterSheetFromXmlData(xmlData: any): CharacterSheet {
     spellAbility: spellAbility,
     spells: spells,
     spellSlots: spellSlots,
+    spellsPerDay: spellsPerDay,
+    spellsDd: spellsDd,
+    spellAttackBonus: spellAttackBonus,
     className: className,
     race: race,
     background: background,
