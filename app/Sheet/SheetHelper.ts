@@ -362,7 +362,7 @@ export function extractCharacterSheetFromXmlData(xmlData: any): CharacterSheet {
         const damage1h: string = item.damage1H?._text
         const damage2h: string = item.damage2H?._text
         const damageType: string = damageTypes[item.damageType ? Number.parseInt(item.damageType._text) : 0]
-        const damageBonus = type == 6 ? scoreToModifier(abilityScores[1]) : doesWeaponHaveProperty(weapon, WeaponProperty.Finesse) ? 
+        let damageBonus = type == 6 ? scoreToModifier(abilityScores[1]) : doesWeaponHaveProperty(weapon, WeaponProperty.Finesse) ? 
           Math.max(scoreToModifier(abilityScores[0]), scoreToModifier(abilityScores[1])) : 
           scoreToModifier(abilityScores[0])
         let attackBonus = proficiencyBonus + damageBonus
@@ -370,6 +370,13 @@ export function extractCharacterSheetFromXmlData(xmlData: any): CharacterSheet {
         for (let mod of mods) {
           if (mod.category == 0 && mod.type == 5 && type == 6) attackBonus += mod.value
         }
+
+        if (item.mod?.length)
+          for (let modNode of item.mod) {
+            let mod = modFromNode(modNode)
+            if (mod.category == 0 && mod.type == 1) attackBonus += mod.value
+            if (mod.category == 0 && mod.type == 2) damageBonus += mod.value
+          }
 
         if (damage1h) attacks.push({
           name: weapon.name,
